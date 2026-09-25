@@ -1,0 +1,54 @@
+{
+  "dataset": "2wiki",
+  "data": "data/2wiki",
+  "artifacts": "artifacts/2wiki/rilo/42",
+  "output": "runs/2wiki/rilo/42",
+  "source_artifacts": null,
+  "seed": 42,
+  "controller_seed": 11,
+  "device": "cuda:0",
+  "embedding_device": "cuda:0",
+  "query_device": "cuda:0",
+  "dtype": "bfloat16",
+  "embedding_model": "Qwen/Qwen3-Embedding-4B",
+  "language_model": "Qwen/Qwen3-8B",
+  "reader_model": "Qwen/Qwen3-32B",
+  "embedding_revision": "main",
+  "language_revision": "main",
+  "reader_revision": "main",
+  "reader_url": null,
+  "reader_api_key_env": "RILO_API_KEY",
+  "reader_device_map": "auto",
+  "variant": "rilo",
+  "operator": {
+    "hidden": 256, "codes": 16, "depth": 3, "epochs": 5,
+    "batch_size": 512, "learning_rate": 0.0003, "weight_decay": 0.001,
+    "max_examples": 80000, "data_seed": 20260710, "negatives": 126,
+    "temperature": 0.07, "distill": 0.5, "balance": 0.03, "entropy": 0.002,
+    "train_depth": 3, "route_noise": 0.0
+  },
+  "proposal": {"steps": 3000, "batch_size": 16, "learning_rate": 0.0003},
+  "query": {
+    "examples": 12000, "steps": 3000, "batch_size": 16,
+    "micro_batch": 1, "learning_rate": 0.0002, "weight_decay": 0.001,
+    "input_tokens": 2048, "target_tokens": 96, "output_tokens": 32,
+    "lora_rank": 16, "lora_alpha": 32, "alignment": 0.1,
+    "gradient_checkpointing": true
+  },
+  "controller": {
+    "searches": 24000, "frontier": 2100, "first_level_searches": 8100,
+    "steps": 2000, "rounds": 10, "batch_size": 64,
+    "learning_rate": 0.0003, "weight_decay": 0.001,
+    "cost": 0.02, "beta": 1.0, "mode": "adaptive"
+  },
+  "retrieval": {
+    "budget": 3, "top_k": 20, "score_k": 10, "rrf": 60,
+    "pivots": 5, "beam": 4, "plans": 12, "merge": 0.98,
+    "merge_mode": "endpoint", "length_penalty": 0.0,
+    "context_tokens": 512, "replan": true
+  },
+  "reader": {"input_tokens": 4096, "output_tokens": 256},
+  "embedding_batch": 8,
+  "embedding_tokens": 8192,
+  "embedding_dimension": null
+}

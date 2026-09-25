@@ -1,0 +1,1 @@
+{"extends": "base.json", "dataset": "hotpotqa", "data": "data/hotpotqa", "artifacts": "artifacts/hotpotqa/rilo/42", "output": "runs/hotpotqa/rilo/42"}

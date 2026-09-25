@@ -1,0 +1,1 @@
+{"extends": "base.json", "dataset": "musique", "data": "data/musique", "artifacts": "artifacts/musique/rilo/42", "output": "runs/musique/rilo/42"}

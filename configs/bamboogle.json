@@ -1,0 +1,1 @@
+{"extends": "base.json", "dataset": "bamboogle", "data": "data/bamboogle", "artifacts": "artifacts/bamboogle", "source_artifacts": "artifacts/2wiki/rilo/42", "output": "runs/bamboogle/rilo/42"}

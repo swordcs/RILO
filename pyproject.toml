@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rilo-retrieval"
+version = "0.1.0"
+description = "Query planning with latent relational operators for multi-hop retrieval"
+readme = "README.md"
+requires-python = ">=3.10,<3.13"
+dependencies = [
+  "torch==2.7.1",
+  "transformers==4.51.3",
+  "peft==0.15.2",
+  "accelerate==1.6.0",
+  "numpy==2.2.5",
+  "faiss-cpu==1.10.0",
+  "rank-bm25==0.2.2",
+  "scikit-learn==1.6.1",
+  "matplotlib==3.10.1",
+  "requests==2.32.3",
+  "tqdm==4.67.1"
+]
+
+[project.scripts]
+rilo = "rilo.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
