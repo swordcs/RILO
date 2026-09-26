@@ -170,9 +170,10 @@ class Retriever:
             elif self.variant == "endpoint_only":
                 query = ""
             else:
-                prompt = query_prompt(state.question, passages, plan["pivot"], plan["focus"])
-                query, usage = self.realizer.generate_query(prompt,
-                    None if self.variant == "text_only" else plan["endpoint"], plan["soft_codes"])
+                prompt = query_prompt(state.question, passages, plan["pivot"], plan["focus"], plan["codes"])
+                query, usage = self.realizer.generate_query(
+                    prompt, None if self.variant == "text_only" else plan["endpoint"]
+                )
                 self.charge(usage)
             self.stats["proposed_candidates"] += 1
             key = query.strip().casefold() if self.variant != "endpoint_only" else tuple(plan["codes"])

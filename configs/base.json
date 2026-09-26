@@ -12,9 +12,11 @@
   "dtype": "bfloat16",
   "embedding_model": "Qwen/Qwen3-Embedding-4B",
   "language_model": "Qwen/Qwen3-8B",
+  "query_model": "google/t5-efficient-tiny",
   "reader_model": "Qwen/Qwen3-32B",
   "embedding_revision": "main",
   "language_revision": "main",
+  "query_revision": "main",
   "reader_revision": "main",
   "reader_url": null,
   "reader_api_key_env": "RILO_API_KEY",
@@ -31,8 +33,8 @@
   "query": {
     "examples": 12000, "steps": 3000, "batch_size": 16,
     "micro_batch": 1, "learning_rate": 0.0002, "weight_decay": 0.001,
-    "input_tokens": 2048, "target_tokens": 96, "output_tokens": 32,
-    "lora_rank": 16, "lora_alpha": 32, "alignment": 0.1,
+    "input_tokens": 512, "target_tokens": 96, "output_tokens": 32,
+    "prefix_tokens": 4, "num_beams": 2, "alignment": 0.1,
     "gradient_checkpointing": true
   },
   "controller": {

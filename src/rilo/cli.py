@@ -58,7 +58,8 @@ def freeze(args):
     from huggingface_hub import HfApi, snapshot_download
     cfg = config(args.config, args.set)
     api = HfApi()
-    for name, revision in (("embedding_model", "embedding_revision"), ("language_model", "language_revision"), ("reader_model", "reader_revision")):
+    for name, revision in (("embedding_model", "embedding_revision"), ("language_model", "language_revision"),
+                           ("query_model", "query_revision"), ("reader_model", "reader_revision")):
         if Path(cfg[name]).exists():
             raise ValueError("Freeze revisions before replacing Hub IDs with local model paths")
         cfg[revision] = api.model_info(cfg[name], revision=cfg[revision]).sha

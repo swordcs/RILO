@@ -271,15 +271,15 @@ def train_query(cfg):
         for _ in range(cfg["query"]["batch_size"]):
             i = rng.randrange(len(rows))
             row = rows[i]
-            endpoint = codes = None
+            endpoint = action_ids = None
             full_state = cfg["variant"] in {"direct", "continuous"} and condition_rng.random() < 0.5
             with torch.no_grad():
                 anchor = torch.tensor(states["anchor"][i:i + 1], device=device)
                 if full_state:
                     anchor = torch.tensor(states["state"][i:i + 1, :index.embeddings.shape[1]], device=device)
                 if cfg["variant"] == "continuous":
-                    endpoint, hidden = model(torch.tensor(states["state"][i:i + 1], device=device), anchor)
-                    endpoint, codes = endpoint[0].cpu().numpy(), hidden.cpu().numpy()
+                    endpoint, _ = model(torch.tensor(states["state"][i:i + 1], device=device), anchor)
+                    endpoint = endpoint[0].cpu().numpy()
                 elif cfg["variant"] != "direct":
                     sequence = condition_rng.choice(row["sequences"])
                     ids = torch.tensor([relation_ids[item] for item in sequence], device=device)
@@ -288,13 +288,15 @@ def train_query(cfg):
                     endpoint = anchor
                     for code in assigned:
                         hidden, endpoint = model.step(hidden, anchor, code[None])
-                    endpoint, codes = endpoint[0].cpu().numpy(), model.codes[assigned].cpu().numpy()
+                    endpoint = endpoint[0].cpu().numpy()
+                    action_ids = assigned.cpu().tolist()
             if cfg["variant"] == "text_only":
                 endpoint = None
             prompt = query_prompt(row["question"], [index.text(identity) for identity in row["memory"]],
                                   row["pivot"] if cfg["variant"] not in {"direct", "continuous"} else "",
-                                  index.text(row["source"]) if cfg["variant"] in {"direct", "continuous"} and not full_state else "")
-            loss = realizer(prompt, endpoint, codes, index.text(row["target"]), index.vector(row["target"]))
+                                  index.text(row["source"]) if cfg["variant"] in {"direct", "continuous"} and not full_state else "",
+                                  action_ids)
+            loss = realizer(prompt, endpoint, index.text(row["target"]), index.vector(row["target"]))
             total += float(loss.detach())
             (loss / cfg["query"]["batch_size"]).backward()
         torch.nn.utils.clip_grad_norm_([parameter for parameter in realizer.parameters() if parameter.requires_grad], 1)
