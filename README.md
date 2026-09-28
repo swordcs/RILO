@@ -27,7 +27,8 @@ python -m pip install -e .
 | Role | Model | Training |
 |:--|:--|:--|
 | Passage and query encoder | [Qwen3-Embedding-4B](https://huggingface.co/Qwen/Qwen3-Embedding-4B) | Frozen |
-| Extraction and query generation | [Qwen3-8B](https://huggingface.co/Qwen/Qwen3-8B) | Frozen extraction; LoRA query adaptation |
+| OpenIE extraction | [Qwen3-8B](https://huggingface.co/Qwen/Qwen3-8B) | Frozen |
+| Query realizer | TinyT5 ([google/t5-efficient-tiny](https://huggingface.co/google/t5-efficient-tiny)) | Full fine-tuning with learned endpoint-conditioned soft prefixes |
 | Answer reader | [Qwen3-32B](https://huggingface.co/Qwen/Qwen3-32B) | Frozen, non-thinking decoding |
 
 Resolve model revisions to commit IDs and download the snapshots:
@@ -127,8 +128,8 @@ The endpoint accepts token-ID prompts at `/completions` using the configured rea
 | Operators | K=16, hidden width 256, depth 3, 5 epochs, batch 512 |
 | Operator optimizer | AdamW, learning rate 3e-4, weight decay 1e-3, gradient clipping 1 |
 | Operator objective | Endpoint retrieval + 0.5 distillation + 0.03 balance + 0.002 entropy |
-| Query LoRA | Rank 16, alpha 32, q/v projections, 3,000 updates |
-| Query lengths | Input 2,048 tokens; training target 96; generation 32 |
+| Query realizer | TinyT5, 4 soft-prefix tokens, alignment weight 0.1, 3,000 updates |
+| Query lengths | Input 512 tokens; training target 96; generation 32 |
 | Planning | Up to 5 pivots, beam width 4, up to 12 plans, merge threshold 0.98 |
 | Retrieval | Budget 3 including initialization, top 20 per search, RRF 60, top 10 evaluation |
 | Controller | Up to 24,000 additional collection searches, 2,000 updates, 10 target refreshes |
@@ -217,7 +218,7 @@ Reports export JSON, CSV, Markdown, and PDF. Multi-seed summaries use sample sta
 | `src/rilo/paths.py` | Directed paths and auxiliary alias candidates |
 | `src/rilo/models.py` | Operators, proposals, continuous plans, value model |
 | `src/rilo/training.py` | Operator, proposal, and query training |
-| `src/rilo/query.py` | LoRA query realization and soft prefixes |
+| `src/rilo/query.py` | TinyT5 query realization and endpoint-conditioned soft prefixes |
 | `src/rilo/runtime.py` | Online planning and retrieval |
 | `src/rilo/controller.py` | Transition collection, fitted Q, checkpoint selection |
 | `src/rilo/evaluation.py` | Baseline interfaces, reading, and metrics |
